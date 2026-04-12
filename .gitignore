@@ -1,0 +1,36 @@
+# Dependency directories
+**/node_modules/
+
+# Build outputs
+**/dist/
+**/build/
+**/.vite/
+
+# Test and report artifacts
+**/playwright-report/
+**/test-results/
+coverage/
+
+# Python artifacts
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+
+# Environment and local config
+**/.env
+**/.env.*
+!.env.example
+*.log
+
+# IDE/editor
+.vscode/
+*.code-workspace
+
+# Local restore and temp folders
+.restore-points/
+
+# Runtime uploads
+siia-backend/media/
+
+# Ignore design-system sandbox not part of SIIA app delivery
+react-dsgov/
