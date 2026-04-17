@@ -1,5 +1,13 @@
 # SIIA 2.0
 
+## Fluxo de Branches
+
+- Branch principal de integracao: `main`.
+- Propagacao para `master`: somente em lote controlado, via PR/merge de sincronizacao.
+- Evitar commits diretos paralelos em `main` e `master`.
+
+Consulte [CONTRIBUTING.md](CONTRIBUTING.md) para o fluxo completo.
+
 Contexto do Projeto: > Estou modernizando o ecossistema SIIA (legado PHP) para um portal de micro-apps usando Django (backend) e React (frontend). O banco de dados é PostgreSQL e a autenticação será via LDAP.
 
 Tarefa: > Crie a estrutura inicial da Página Pública do Portal e o Dashboard de Aplicativos.
