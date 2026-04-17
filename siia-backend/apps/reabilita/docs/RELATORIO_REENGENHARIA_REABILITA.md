@@ -96,7 +96,7 @@ Observacoes:
 - Gerar matriz tecnica de migracao (Endpoint, Metodo, Origem, Destino, Status, Risco, Teste de aceite) para iniciar execucao por sprint.
 
 ## Execucao realizada nesta rodada
-1. Matriz endpoint-a-endpoint gerada em `MATRIZ_ENDPOINTS_REABILITA_X_SIIA.md`.
+1. Matriz endpoint-a-endpoint gerada em [MATRIZ_ENDPOINTS_REABILITA_X_SIIA.md](MATRIZ_ENDPOINTS_REABILITA_X_SIIA.md).
 2. Backend SIIA ajustado para `search_path=reabilita,public` via `POSTGRES_SEARCH_PATH`.
 3. Rota `/dashboard/reabilita/*` saiu do placeholder e passou a renderizar o dashboard real do modulo Reabilita (fase inicial).
 4. Endpoint `GET /api/v1/estatistica/painel-clinico/` passou de payload mock para agregacoes reais com base em dados de atendimentos clinicos.
