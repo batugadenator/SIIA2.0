@@ -1,0 +1,6 @@
+.route-fallback {
+  align-items: center;
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+}

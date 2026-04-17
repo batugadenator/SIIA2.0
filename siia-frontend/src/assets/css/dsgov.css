@@ -1,0 +1,12 @@
+:root {
+  --dsgov-bg: #f8f8f8;
+  --dsgov-text: #111111;
+  --dsgov-primary: #1351b4;
+}
+
+body {
+  margin: 0;
+  font-family: "Rawline", "Raleway", "Noto Sans", "Segoe UI", sans-serif;
+  color: var(--dsgov-text);
+  background: var(--dsgov-bg);
+}

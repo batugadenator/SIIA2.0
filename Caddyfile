@@ -1,0 +1,29 @@
+{$SIIA_HOST} {
+	handle_path /api/* {
+		reverse_proxy siia-backend:8000
+	}
+
+	handle_path /api/v1/* {
+		reverse_proxy siia-backend:8000
+	}
+
+	handle /admin/* {
+		reverse_proxy siia-backend:8000
+	}
+
+	handle /static/* {
+		reverse_proxy siia-backend:8000
+	}
+
+	handle /media/* {
+		reverse_proxy siia-backend:8000
+	}
+
+	handle {
+		reverse_proxy siia-frontend:80
+	}
+
+	log {
+		output stdout
+	}
+}

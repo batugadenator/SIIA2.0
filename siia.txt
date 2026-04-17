@@ -1,0 +1,5 @@
+#Dados do Banco de Dados
+Host: localhost
+DB_NAME: siia
+DBU_SER: siia
+DB_PASSWORD: highlighter

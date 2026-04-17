@@ -1,0 +1,66 @@
+services:
+  siia-backend:
+    build:
+      context: ./siia-backend
+      dockerfile: Dockerfile
+    container_name: siia-backend
+    restart: unless-stopped
+    environment:
+      DEBUG: ${DEBUG:-False}
+      SECRET_KEY: ${SECRET_KEY:-change-me}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_SEARCH_PATH: ${POSTGRES_SEARCH_PATH:-reabilita,siagg,public}
+      USE_LDAP_AUTH: ${USE_LDAP_AUTH:-false}
+      SIIA_ENV: ${SIIA_ENV:-prod}
+      CMS_ALLOWED_NEXTCLOUD_HOSTS: ${CMS_ALLOWED_NEXTCLOUD_HOSTS:-}
+      CMS_ALLOWED_LEGACY_HOSTS: ${CMS_ALLOWED_LEGACY_HOSTS:-}
+      CMS_ALLOWED_EXTERNAL_HOSTS: ${CMS_ALLOWED_EXTERNAL_HOSTS:-}
+    volumes:
+      - siia_media:/app/media
+      - siia_static:/app/staticfiles
+    networks:
+      - siia_net
+
+  siia-frontend:
+    build:
+      context: ./siia-frontend
+      dockerfile: Dockerfile
+    container_name: siia-frontend
+    restart: unless-stopped
+    depends_on:
+      - siia-backend
+    networks:
+      - siia_net
+
+  siia-caddy:
+    image: caddy:2.8-alpine
+    container_name: siia-caddy
+    restart: unless-stopped
+    depends_on:
+      - siia-frontend
+      - siia-backend
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SIIA_HOST: ${SIIA_HOST:-:80}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - siia_net
+
+volumes:
+  caddy_data:
+  caddy_config:
+  siia_media:
+  siia_static:
+
+networks:
+  siia_net:
+    driver: bridge

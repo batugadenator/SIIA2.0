@@ -1,0 +1,6 @@
+#Dados do Banco de Dados
+Host: localhost
+DB_NAME: siia
+DB_USER: siia
+DB_PASSWORD: highlighter
+DB_SCHEMA: siagg

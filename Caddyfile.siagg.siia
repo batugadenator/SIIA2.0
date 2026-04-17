@@ -1,0 +1,45 @@
+http://192.168.3.60 {
+	handle /siagg-backend {
+		redir /siagg-backend/ 308
+	}
+
+	handle /siagg {
+		redir /siagg/ 308
+	}
+
+	handle_path /portainer/* {
+		reverse_proxy portainer:9000
+	}
+
+	handle_path /api/v1/* {
+		reverse_proxy 172.18.0.3:8000
+	}
+
+	handle_path /siagg-backend/* {
+		reverse_proxy siagg-backend:8000
+	}
+
+	handle_path /siagg/* {
+		reverse_proxy siagg-frontend:80
+	}
+
+	handle /api/* {
+		reverse_proxy reabilita-backend:8000
+	}
+
+	handle /admin/* {
+		reverse_proxy reabilita-backend:8000
+	}
+
+	handle /static/* {
+		reverse_proxy reabilita-backend:8000
+	}
+
+	handle {
+		reverse_proxy reabilita-frontend:80
+	}
+
+	log {
+		output stdout
+	}
+}

@@ -1,0 +1,112 @@
+from django.db import migrations, models
+import django.db.models.deletion
+
+
+class Migration(migrations.Migration):
+    dependencies = [
+        ("usuarios", "0005_update_launchpad_visual_identity"),
+        ("reabilita", "0001_initial"),
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name="ReabilitaAtendimentoSaude",
+            fields=[
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("data_registro", models.DateField(auto_now_add=True)),
+                ("cadete_id", models.PositiveIntegerField()),
+                ("cadete_nr_militar", models.CharField(blank=True, default="", max_length=40)),
+                ("cadete_nome_guerra", models.CharField(blank=True, default="", max_length=120)),
+                ("medico_id", models.PositiveIntegerField()),
+                ("atendimento_origem_id", models.PositiveIntegerField(blank=True, null=True)),
+                ("tipo_atendimento", models.CharField(default="Inicial", max_length=30)),
+                ("tipo_lesao", models.CharField(default="Muscular", max_length=50)),
+                ("origem_lesao", models.CharField(blank=True, default="", max_length=50)),
+                ("segmento_corporal", models.CharField(max_length=100)),
+                ("estrutura_anatomica", models.CharField(max_length=100)),
+                ("localizacao_lesao", models.CharField(max_length=100)),
+                ("lateralidade", models.CharField(default="Nao e o caso", max_length=30)),
+                ("classificacao_atividade", models.CharField(blank=True, default="", max_length=100)),
+                ("tipo_atividade", models.CharField(blank=True, default="", max_length=100)),
+                ("tfm_taf", models.CharField(blank=True, default="", max_length=100)),
+                ("modalidade_esportiva", models.CharField(blank=True, default="", max_length=100)),
+                ("conduta_terapeutica", models.CharField(blank=True, default="", max_length=150)),
+                ("decisao_sred", models.CharField(blank=True, default="", max_length=50)),
+                ("estado_fluxo", models.CharField(default="INICIAL", max_length=30)),
+                ("prontidao_instrutor", models.CharField(default="Em Avaliacao", max_length=80)),
+                ("medicamentoso", models.BooleanField(default=False)),
+                ("solicitar_exames_complementares", models.BooleanField(default=False)),
+                ("exames_complementares", models.JSONField(blank=True, default=list)),
+                ("encaminhamentos_multidisciplinares", models.JSONField(blank=True, default=list)),
+                ("disposicao_cadete", models.JSONField(blank=True, default=list)),
+                ("notas_clinicas", models.TextField(blank=True, default="")),
+                ("flag_sred", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+            ],
+            options={
+                "db_table": "reabilita_atendimento_saude",
+                "ordering": ["-data_registro", "-id"],
+            },
+        ),
+        migrations.CreateModel(
+            name="ReabilitaLDAPConfig",
+            fields=[
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("enabled", models.BooleanField(default=False)),
+                ("server_uri", models.CharField(blank=True, default="", max_length=255)),
+                ("bind_dn", models.CharField(blank=True, default="", max_length=255)),
+                ("bind_password", models.CharField(blank=True, default="", max_length=255)),
+                ("user_search_base_dn", models.CharField(blank=True, default="", max_length=255)),
+                ("user_search_filter", models.CharField(default="(sAMAccountName=%(user)s)", max_length=255)),
+                ("start_tls", models.BooleanField(default=False)),
+                ("always_update_user", models.BooleanField(default=True)),
+                ("mirror_groups", models.BooleanField(default=False)),
+                ("cache_timeout", models.PositiveIntegerField(default=3600)),
+                ("attr_first_name", models.CharField(default="givenName", max_length=100)),
+                ("attr_last_name", models.CharField(default="sn", max_length=100)),
+                ("attr_email", models.CharField(default="mail", max_length=100)),
+                ("group_search_base_dn", models.CharField(blank=True, default="", max_length=255)),
+                ("group_search_filter", models.CharField(default="(objectClass=group)", max_length=255)),
+                ("group_type", models.CharField(default="GroupOfNamesType", max_length=50)),
+                ("posix_member_attr", models.CharField(default="memberUid", max_length=100)),
+                ("admin_group_dn", models.CharField(blank=True, default="", max_length=255)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "updated_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="reabilita_ldap_configs_atualizadas",
+                        to="usuarios.usuario",
+                    ),
+                ),
+            ],
+            options={"db_table": "reabilita_ldap_config"},
+        ),
+        migrations.CreateModel(
+            name="ReabilitaUsuarioPerfil",
+            fields=[
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("cpf", models.CharField(max_length=11, unique=True)),
+                ("perfil", models.CharField(default="Consultor", max_length=80)),
+                ("especialidade_medica", models.CharField(blank=True, default="", max_length=80)),
+                ("funcao_instrutor", models.CharField(blank=True, default="", max_length=120)),
+                ("posto_graduacao", models.CharField(blank=True, default="", max_length=80)),
+                ("nome_guerra", models.CharField(blank=True, default="", max_length=120)),
+                ("setor", models.CharField(blank=True, default="", max_length=120)),
+                ("fracao", models.CharField(blank=True, default="", max_length=120)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="reabilita_perfil",
+                        to="usuarios.usuario",
+                    ),
+                ),
+            ],
+            options={"db_table": "reabilita_usuario_perfil"},
+        ),
+    ]
