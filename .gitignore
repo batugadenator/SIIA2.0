@@ -34,3 +34,6 @@ siia-backend/media/
 
 # Ignore design-system sandbox not part of SIIA app delivery
 react-dsgov/
+
+# Ignore legacy SIIA source tree
+siia/
