@@ -10,14 +10,14 @@ interface ConfigItem {
 	path: string;
 }
 
-const REABILITA_BASE = '/dashboard/reabilita';
+const CADFUNCIONAL_BASE = '/dashboard/cadfuncional';
 
 const configItems: ConfigItem[] = [
-	{ label: 'Usuários e Perfis', path: `${REABILITA_BASE}/usuarios-perfis` },
-	{ label: 'Configuração LDAP', path: `${REABILITA_BASE}/configuracao-ldap` },
-	{ label: 'Importar CSV', path: `${REABILITA_BASE}/importar-csv` },
-	{ label: 'Carga de Referências', path: `${REABILITA_BASE}/carga-referencias` },
-	{ label: 'Cadastrar Discentes', path: `${REABILITA_BASE}/cadetes/novo` },
+	{ label: 'Usuários e Perfis', path: `${CADFUNCIONAL_BASE}/usuarios-perfis` },
+	{ label: 'Configuração LDAP', path: `${CADFUNCIONAL_BASE}/configuracao-ldap` },
+	{ label: 'Importar CSV', path: `${CADFUNCIONAL_BASE}/importar-csv` },
+	{ label: 'Carga de Referências', path: `${CADFUNCIONAL_BASE}/carga-referencias` },
+	{ label: 'Cadastrar Discentes', path: `${CADFUNCIONAL_BASE}/cadetes/novo` },
 ];
 
 export const ConfigGeralPage = () => {
@@ -35,7 +35,7 @@ export const ConfigGeralPage = () => {
 			<SectionCard title="Acessos e Configurações">
 				<Stack spacing={1.25}>
 					{configItems.map((item) => {
-						const canOpen = canAccessRoute(user?.perfil, item.path.replace('/dashboard/reabilita', ''));
+						const canOpen = canAccessRoute(user?.perfil, item.path.replace('/dashboard/cadfuncional', ''));
 						return (
 							<Button
 								key={item.path}

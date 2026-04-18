@@ -368,7 +368,7 @@ export const UsuariosPerfisPage = () => {
 				</Stack>
 				<Button
 					component={RouterLink}
-					to="/dashboard/reabilita/configuracoes-gerais"
+					to="/dashboard/cadfuncional/configuracoes-gerais"
 					variant="text"
 					sx={{ minHeight: 44, minWidth: 44, alignSelf: { xs: 'flex-start', sm: 'center' } }}
 				>

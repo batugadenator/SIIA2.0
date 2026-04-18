@@ -11,7 +11,7 @@ export type MotivoAtendimentoPsico =
 	| 'Questões pessoais'
 	| 'Saúde Geral'
 	| 'Saúde Mental'
-	| 'Em acompanhamento no REABILITA';
+	| 'Em acompanhamento no CADFUNCIONAL';
 
 export interface IntervencaoPsicopedagogica {
 	id: number;

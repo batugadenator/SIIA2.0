@@ -11,7 +11,7 @@ DATABASES = {
         "HOST": os.getenv("POSTGRES_HOST", "localhost"),
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
         "OPTIONS": {
-            "options": f"-c search_path={os.getenv('POSTGRES_SEARCH_PATH', 'siagg,reabilita,public')}",
+            "options": f"-c search_path={os.getenv('POSTGRES_SEARCH_PATH', 'public,siagg,cadfuncional')}",
         },
     }
 }

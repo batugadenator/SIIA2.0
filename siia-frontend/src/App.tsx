@@ -10,27 +10,27 @@ const LegadosLayout = lazy(() => import("./modules/apps/LegadosLayout"));
 const PortalHomePage = lazy(() => import("./modules/portal/PortalHomePage"));
 const PortalNoticiasPage = lazy(() => import("./modules/portal/PortalNoticiasPage"));
 const LoginPage = lazy(() => import("./modules/auth/LoginPage"));
-const ReabilitaDashboardPage = lazy(() => import("./modules/reabilita/ReabilitaDashboardPage"));
-const ReabilitaDashPage = lazy(() => import("./modules/reabilita/src/pages/DashboardPage").then((module) => ({ default: module.DashboardPage })));
-const ReabilitaMedicoPage = lazy(() => import("./modules/reabilita/src/pages/MedicoPage").then((module) => ({ default: module.MedicoPage })));
-const ReabilitaMedicoDetalhesPage = lazy(() => import("./modules/reabilita/src/pages/MedicoAtendimentoDetalhesPage").then((module) => ({ default: module.MedicoAtendimentoDetalhesPage })));
-const ReabilitaCadetesPacientesPage = lazy(() => import("./modules/reabilita/src/pages/CadetesPacientesPage").then((module) => ({ default: module.CadetesPacientesPage })));
-const ReabilitaCadastrarCadetePage = lazy(() => import("./modules/reabilita/src/pages/CadastrarCadetePage").then((module) => ({ default: module.CadastrarCadetePage })));
-const ReabilitaNovoAtendimentoPage = lazy(() => import("./modules/reabilita/src/pages/NovoAtendimentoPage").then((module) => ({ default: module.NovoAtendimentoPage })));
-const ReabilitaFisioterapeutaPage = lazy(() => import("./modules/reabilita/src/pages/FisioterapeutaPage").then((module) => ({ default: module.FisioterapeutaPage })));
-const ReabilitaEspecialidadeDetalhesPage = lazy(() => import("./modules/reabilita/src/pages/EspecialidadeAtendimentoDetalhesPage").then((module) => ({ default: module.EspecialidadeAtendimentoDetalhesPage })));
-const ReabilitaFichaAvaliacaoSredPage = lazy(() => import("./modules/reabilita/src/pages/FichaAvaliacaoSredPage").then((module) => ({ default: module.FichaAvaliacaoSredPage })));
-const ReabilitaEducadorFisicoPage = lazy(() => import("./modules/reabilita/src/pages/EducadorFisicoPage").then((module) => ({ default: module.EducadorFisicoPage })));
-const ReabilitaNutricionistaPage = lazy(() => import("./modules/reabilita/src/pages/NutricionistaPage").then((module) => ({ default: module.NutricionistaPage })));
-const ReabilitaPsicopedagogoPage = lazy(() => import("./modules/reabilita/src/pages/PsicopedagogoPage").then((module) => ({ default: module.PsicopedagogoPage })));
-const ReabilitaInstrutorPage = lazy(() => import("./modules/reabilita/src/pages/InstrutorPage").then((module) => ({ default: module.InstrutorPage })));
-const ReabilitaSredPage = lazy(() => import("./modules/reabilita/src/pages/sredPage").then((module) => ({ default: module.SredPage })));
-const ReabilitaMinhaContaPage = lazy(() => import("./modules/reabilita/src/pages/MinhaContaPage").then((module) => ({ default: module.MinhaContaPage })));
-const ReabilitaUsuariosPerfisPage = lazy(() => import("./modules/reabilita/src/pages/UsuariosPerfisPage").then((module) => ({ default: module.UsuariosPerfisPage })));
-const ReabilitaConfigGeralPage = lazy(() => import("./modules/reabilita/src/pages/ConfigGeral").then((module) => ({ default: module.ConfigGeralPage })));
-const ReabilitaConfiguracaoLdapPage = lazy(() => import("./modules/reabilita/src/pages/ConfiguracaoLdapPage").then((module) => ({ default: module.ConfiguracaoLdapPage })));
-const ReabilitaImportarCSVPage = lazy(() => import("./modules/reabilita/src/pages/ImportarCSVPage").then((module) => ({ default: module.ImportarCSVPage })));
-const ReabilitaCargaReferenciasPage = lazy(() => import("./modules/reabilita/src/pages/CargaReferenciasPage").then((module) => ({ default: module.CargaReferenciasPage })));
+const CadFuncionalDashboardPage = lazy(() => import("./modules/cadfuncional/CadFuncionalDashboardPage"));
+const CadFuncionalDashPage = lazy(() => import("./modules/cadfuncional/src/pages/DashboardPage").then((module) => ({ default: module.DashboardPage })));
+const CadFuncionalMedicoPage = lazy(() => import("./modules/cadfuncional/src/pages/MedicoPage").then((module) => ({ default: module.MedicoPage })));
+const CadFuncionalMedicoDetalhesPage = lazy(() => import("./modules/cadfuncional/src/pages/MedicoAtendimentoDetalhesPage").then((module) => ({ default: module.MedicoAtendimentoDetalhesPage })));
+const CadFuncionalCadetesPacientesPage = lazy(() => import("./modules/cadfuncional/src/pages/CadetesPacientesPage").then((module) => ({ default: module.CadetesPacientesPage })));
+const CadFuncionalCadastrarCadetePage = lazy(() => import("./modules/cadfuncional/src/pages/CadastrarCadetePage").then((module) => ({ default: module.CadastrarCadetePage })));
+const CadFuncionalNovoAtendimentoPage = lazy(() => import("./modules/cadfuncional/src/pages/NovoAtendimentoPage").then((module) => ({ default: module.NovoAtendimentoPage })));
+const CadFuncionalFisioterapeutaPage = lazy(() => import("./modules/cadfuncional/src/pages/FisioterapeutaPage").then((module) => ({ default: module.FisioterapeutaPage })));
+const CadFuncionalEspecialidadeDetalhesPage = lazy(() => import("./modules/cadfuncional/src/pages/EspecialidadeAtendimentoDetalhesPage").then((module) => ({ default: module.EspecialidadeAtendimentoDetalhesPage })));
+const CadFuncionalFichaAvaliacaoSredPage = lazy(() => import("./modules/cadfuncional/src/pages/FichaAvaliacaoSredPage").then((module) => ({ default: module.FichaAvaliacaoSredPage })));
+const CadFuncionalEducadorFisicoPage = lazy(() => import("./modules/cadfuncional/src/pages/EducadorFisicoPage").then((module) => ({ default: module.EducadorFisicoPage })));
+const CadFuncionalNutricionistaPage = lazy(() => import("./modules/cadfuncional/src/pages/NutricionistaPage").then((module) => ({ default: module.NutricionistaPage })));
+const CadFuncionalPsicopedagogoPage = lazy(() => import("./modules/cadfuncional/src/pages/PsicopedagogoPage").then((module) => ({ default: module.PsicopedagogoPage })));
+const CadFuncionalInstrutorPage = lazy(() => import("./modules/cadfuncional/src/pages/InstrutorPage").then((module) => ({ default: module.InstrutorPage })));
+const CadFuncionalSredPage = lazy(() => import("./modules/cadfuncional/src/pages/sredPage").then((module) => ({ default: module.SredPage })));
+const CadFuncionalMinhaContaPage = lazy(() => import("./modules/cadfuncional/src/pages/MinhaContaPage").then((module) => ({ default: module.MinhaContaPage })));
+const CadFuncionalUsuariosPerfisPage = lazy(() => import("./modules/cadfuncional/src/pages/UsuariosPerfisPage").then((module) => ({ default: module.UsuariosPerfisPage })));
+const CadFuncionalConfigGeralPage = lazy(() => import("./modules/cadfuncional/src/pages/ConfigGeral").then((module) => ({ default: module.ConfigGeralPage })));
+const CadFuncionalConfiguracaoLdapPage = lazy(() => import("./modules/cadfuncional/src/pages/ConfiguracaoLdapPage").then((module) => ({ default: module.ConfiguracaoLdapPage })));
+const CadFuncionalImportarCSVPage = lazy(() => import("./modules/cadfuncional/src/pages/ImportarCSVPage").then((module) => ({ default: module.ImportarCSVPage })));
+const CadFuncionalCargaReferenciasPage = lazy(() => import("./modules/cadfuncional/src/pages/CargaReferenciasPage").then((module) => ({ default: module.CargaReferenciasPage })));
 const SiaggLayout = lazy(() => import("./modules/siagg/SiaggLayout"));
 const SiaggDashboardPage = lazy(() => import("./modules/siagg/SiaggDashboardPage"));
 const SiaggAreaDetailPage = lazy(() => import("./modules/siagg/pages/SiaggAreaDetailPage"));
@@ -65,31 +65,31 @@ export default function App() {
 
         <Route path="/dashboard" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
           <Route index element={<AppsDashboardPage />} />
-          <Route path="reabilita" element={<ReabilitaDashboardPage />}>
-            <Route index element={<ReabilitaDashPage />} />
-            <Route path="medico" element={<ReabilitaMedicoPage />} />
-            <Route path="medico/paciente/:cadeteId" element={<ReabilitaMedicoDetalhesPage />} />
-            <Route path="cadetes-pacientes" element={<ReabilitaCadetesPacientesPage />} />
-            <Route path="cadetes/novo" element={<ReabilitaCadastrarCadetePage />} />
-            <Route path="atendimentos/novo" element={<ReabilitaNovoAtendimentoPage />} />
-            <Route path="fisioterapia" element={<ReabilitaFisioterapeutaPage />} />
-            <Route path="fisioterapia/atendimento/:atendimentoId/detalhes" element={<ReabilitaEspecialidadeDetalhesPage modulo="fisioterapia" />} />
-            <Route path="fisioterapia/avaliacao-sred/:atendimentoId" element={<ReabilitaFichaAvaliacaoSredPage />} />
-            <Route path="educador-fisico" element={<ReabilitaEducadorFisicoPage />} />
-            <Route path="educador-fisico/atendimento/:atendimentoId/detalhes" element={<ReabilitaEspecialidadeDetalhesPage modulo="educador-fisico" />} />
-            <Route path="nutricao" element={<ReabilitaNutricionistaPage />} />
-            <Route path="nutricao/atendimento/:atendimentoId/detalhes" element={<ReabilitaEspecialidadeDetalhesPage modulo="nutricao" />} />
-            <Route path="psicopedagogia" element={<ReabilitaPsicopedagogoPage />} />
-            <Route path="psicopedagogia/atendimento/:atendimentoId/detalhes" element={<ReabilitaEspecialidadeDetalhesPage modulo="psicopedagogia" />} />
-            <Route path="instrutor" element={<ReabilitaInstrutorPage />} />
-            <Route path="instrutor/atendimento/:atendimentoId/detalhes" element={<ReabilitaEspecialidadeDetalhesPage modulo="instrutor" />} />
-            <Route path="sred" element={<ReabilitaSredPage />} />
-            <Route path="minha-conta" element={<ReabilitaMinhaContaPage />} />
-            <Route path="usuarios-perfis" element={<ReabilitaUsuariosPerfisPage />} />
-            <Route path="configuracoes-gerais" element={<ReabilitaConfigGeralPage />} />
-            <Route path="configuracao-ldap" element={<ReabilitaConfiguracaoLdapPage />} />
-            <Route path="importar-csv" element={<ReabilitaImportarCSVPage />} />
-            <Route path="carga-referencias" element={<ReabilitaCargaReferenciasPage />} />
+          <Route path="cadfuncional" element={<CadFuncionalDashboardPage />}>
+            <Route index element={<CadFuncionalDashPage />} />
+            <Route path="medico" element={<CadFuncionalMedicoPage />} />
+            <Route path="medico/paciente/:cadeteId" element={<CadFuncionalMedicoDetalhesPage />} />
+            <Route path="cadetes-pacientes" element={<CadFuncionalCadetesPacientesPage />} />
+            <Route path="cadetes/novo" element={<CadFuncionalCadastrarCadetePage />} />
+            <Route path="atendimentos/novo" element={<CadFuncionalNovoAtendimentoPage />} />
+            <Route path="fisioterapia" element={<CadFuncionalFisioterapeutaPage />} />
+            <Route path="fisioterapia/atendimento/:atendimentoId/detalhes" element={<CadFuncionalEspecialidadeDetalhesPage modulo="fisioterapia" />} />
+            <Route path="fisioterapia/avaliacao-sred/:atendimentoId" element={<CadFuncionalFichaAvaliacaoSredPage />} />
+            <Route path="educador-fisico" element={<CadFuncionalEducadorFisicoPage />} />
+            <Route path="educador-fisico/atendimento/:atendimentoId/detalhes" element={<CadFuncionalEspecialidadeDetalhesPage modulo="educador-fisico" />} />
+            <Route path="nutricao" element={<CadFuncionalNutricionistaPage />} />
+            <Route path="nutricao/atendimento/:atendimentoId/detalhes" element={<CadFuncionalEspecialidadeDetalhesPage modulo="nutricao" />} />
+            <Route path="psicopedagogia" element={<CadFuncionalPsicopedagogoPage />} />
+            <Route path="psicopedagogia/atendimento/:atendimentoId/detalhes" element={<CadFuncionalEspecialidadeDetalhesPage modulo="psicopedagogia" />} />
+            <Route path="instrutor" element={<CadFuncionalInstrutorPage />} />
+            <Route path="instrutor/atendimento/:atendimentoId/detalhes" element={<CadFuncionalEspecialidadeDetalhesPage modulo="instrutor" />} />
+            <Route path="sred" element={<CadFuncionalSredPage />} />
+            <Route path="minha-conta" element={<CadFuncionalMinhaContaPage />} />
+            <Route path="usuarios-perfis" element={<CadFuncionalUsuariosPerfisPage />} />
+            <Route path="configuracoes-gerais" element={<CadFuncionalConfigGeralPage />} />
+            <Route path="configuracao-ldap" element={<CadFuncionalConfiguracaoLdapPage />} />
+            <Route path="importar-csv" element={<CadFuncionalImportarCSVPage />} />
+            <Route path="carga-referencias" element={<CadFuncionalCargaReferenciasPage />} />
           </Route>
           <Route path="siagg" element={<SiaggLayout />}>
             <Route index element={<SiaggDashboardPage />} />

@@ -7,16 +7,16 @@ const ensureAuthToken = async (page: import('@playwright/test').Page) => {
 };
 
 const APP_HOME_ROUTES = [
-  '/dashboard/reabilita',
+  '/dashboard/cadfuncional',
   '/dashboard/siagg',
   '/dashboard/cms',
   '/dashboard/legados',
 ] as const;
 
 test.describe('App shell com menu contextual por modulo', () => {
-  test('Reabilita deve exibir menu funcional do modulo', async ({ page }) => {
+  test('Cadete Funcional deve exibir menu funcional do modulo', async ({ page }) => {
     await ensureAuthToken(page);
-    await page.goto('/dashboard/reabilita');
+    await page.goto('/dashboard/cadfuncional');
     await page.waitForLoadState('domcontentloaded');
 
     await expect(page.locator('.internal-app-shell')).toBeVisible({ timeout: 15000 });
@@ -26,7 +26,7 @@ test.describe('App shell com menu contextual por modulo', () => {
     await expect(page.locator('.internal-nav-link', { hasText: 'Relatórios S-RED' })).toBeVisible();
 
     await page.locator('.internal-nav-link', { hasText: 'Médico' }).click();
-    await expect(page).toHaveURL(/\/dashboard\/reabilita\/medico$/);
+    await expect(page).toHaveURL(/\/dashboard\/cadfuncional\/medico$/);
   });
 
   test('CMS deve exibir menu funcional do modulo', async ({ page }) => {

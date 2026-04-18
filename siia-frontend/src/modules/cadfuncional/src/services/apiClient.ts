@@ -14,7 +14,7 @@ export const unregisterUnauthorizedHandler = (): void => {
 
 const env = (import.meta as { env?: Record<string, string | undefined> }).env;
 
-const baseURL = env?.VITE_API_BASE_URL ?? 'http://localhost:8000/api/v1';
+const baseURL = env?.VITE_API_BASE_URL ?? 'http://localhost:8000/api/cadfuncional';
 
 const readCookie = (name: string): string | null => {
 	if (typeof document === 'undefined') {

@@ -132,7 +132,7 @@ export const CadetesPacientesPage = () => {
 					<Button
 						variant="contained"
 						component={RouterLink}
-						to="/dashboard/reabilita/cadetes/novo"
+						to="/dashboard/cadfuncional/cadetes/novo"
 						sx={{ minHeight: 44, minWidth: 44 }}
 					>
 						+ Cadastrar Cadete

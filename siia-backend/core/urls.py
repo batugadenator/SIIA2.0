@@ -5,12 +5,14 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/reabilita/", include("apps.reabilita.urls")),
-    path("api/v1/", include("apps.reabilita.urls")),
+    path("api/cadfuncional/", include("apps.cadfuncional.urls")),
     path("api/siagg/", include("apps.siagg.urls")),
     path("api/cms/", include("apps.cms.urls")),
     path("api/usuarios/", include("apps.usuarios.urls")),
 ]
+
+if settings.API_V1_ALIAS_ENABLED:
+    urlpatterns.append(path("api/v1/", include("apps.cadfuncional.urls")))
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -17,7 +17,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework.authtoken",
-    "apps.reabilita",
+    "apps.cadfuncional.apps.CadfuncionalConfig",
     "apps.siagg",
     "apps.cms",
     "apps.usuarios",
@@ -62,7 +62,7 @@ DATABASES = {
         "HOST": os.getenv("POSTGRES_HOST", "localhost"),
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
         "OPTIONS": {
-            "options": f"-c search_path={os.getenv('POSTGRES_SEARCH_PATH', 'reabilita,public')}",
+            "options": f"-c search_path={os.getenv('POSTGRES_SEARCH_PATH', 'public,cadfuncional')}",
         },
         "TEST": {
             "NAME": os.getenv("POSTGRES_TEST_DB", "test_siia"),
@@ -172,6 +172,8 @@ CORS_ALLOW_METHODS = [
     "POST",
     "PUT",
 ]
+
+API_V1_ALIAS_ENABLED = os.getenv("API_V1_ALIAS_ENABLED", "true").lower() in {"1", "true", "yes"}
 
 
 def _csv_hosts(env_name: str, default: str = ""):

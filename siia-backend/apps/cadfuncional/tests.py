@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from apps.reabilita.models import ReabilitaAtendimentoClinico
+from apps.cadfuncional.models import CadfuncionalAtendimentoClinico
 
 User = get_user_model()
 
@@ -21,7 +21,7 @@ def _months_ago(base: date, months: int) -> date:
 
 class PainelClinicoViewTests(APITestCase):
     def setUp(self):
-        self.url = reverse("reabilita-painel-clinico")
+        self.url = reverse("cadfuncional-painel-clinico")
 
     def test_retorna_shape_e_tipos_sem_dados(self):
         response = self.client.get(self.url)
@@ -43,9 +43,9 @@ class PainelClinicoViewTests(APITestCase):
     def test_retorna_agregacoes_reais_com_dados(self):
         today = date.today()
 
-        ReabilitaAtendimentoClinico.objects.bulk_create(
+        CadfuncionalAtendimentoClinico.objects.bulk_create(
             [
-                ReabilitaAtendimentoClinico(
+                CadfuncionalAtendimentoClinico(
                     cadete="Cadete Alfa",
                     sexo="Masculino",
                     data_atendimento=today,
@@ -56,7 +56,7 @@ class PainelClinicoViewTests(APITestCase):
                     curso="CFO 1",
                     atividade="Corrida",
                 ),
-                ReabilitaAtendimentoClinico(
+                CadfuncionalAtendimentoClinico(
                     cadete="Cadete Bravo",
                     sexo="Feminino",
                     data_atendimento=today,
@@ -67,7 +67,7 @@ class PainelClinicoViewTests(APITestCase):
                     curso="CFO 2",
                     atividade="Marcha",
                 ),
-                ReabilitaAtendimentoClinico(
+                CadfuncionalAtendimentoClinico(
                     cadete="Cadete Alfa",
                     sexo="Masculino",
                     data_atendimento=_months_ago(today, 1),
@@ -111,7 +111,7 @@ class PainelClinicoViewTests(APITestCase):
 
 class AtendimentoReferenciasViewTests(APITestCase):
     def setUp(self):
-        self.url = reverse("reabilita-saude-atendimentos-referencias")
+        self.url = reverse("cadfuncional-saude-atendimentos-referencias")
 
     def test_retorna_shape_minimo_de_referencias(self):
         response = self.client.get(self.url)
@@ -131,10 +131,10 @@ class AtendimentoReferenciasViewTests(APITestCase):
 
 class AuthSessionAdapterViewTests(APITestCase):
     def setUp(self):
-        self.csrf_url = reverse("reabilita-auth-csrf")
-        self.login_url = reverse("reabilita-auth-login")
-        self.me_url = reverse("reabilita-auth-me")
-        self.logout_url = reverse("reabilita-auth-logout")
+        self.csrf_url = reverse("cadfuncional-auth-csrf")
+        self.login_url = reverse("cadfuncional-auth-login")
+        self.me_url = reverse("cadfuncional-auth-me")
+        self.logout_url = reverse("cadfuncional-auth-logout")
         self.user = User.objects.create_user(
             username="cadete.auth",
             password="SenhaForte#123",
@@ -149,6 +149,7 @@ class AuthSessionAdapterViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["is_authenticated"], False)
         self.assertIsNone(response.data["user"])
+        self.assertIsNone(response.data["autorizacao_legada"])
 
     def test_login_me_logout_fluxo_sessao(self):
         csrf_response = self.client.get(self.csrf_url)
@@ -164,11 +165,17 @@ class AuthSessionAdapterViewTests(APITestCase):
         self.assertEqual(login_response.data["user"]["username"], "cadete.auth")
         self.assertEqual(login_response.data["user"]["is_staff"], True)
         self.assertEqual(login_response.data["user"]["perfil"], "Operador")
+        self.assertIn("autorizacao_legada", login_response.data)
+        self.assertIn("cadfuncional", login_response.data["autorizacao_legada"])
+        self.assertIn("cms", login_response.data["autorizacao_legada"])
 
         me_response = self.client.get(self.me_url)
         self.assertEqual(me_response.status_code, status.HTTP_200_OK)
         self.assertEqual(me_response.data["is_authenticated"], True)
         self.assertEqual(me_response.data["user"]["username"], "cadete.auth")
+        self.assertIn("autorizacao_legada", me_response.data)
+        self.assertIn("cadfuncional", me_response.data["autorizacao_legada"])
+        self.assertIn("cms", me_response.data["autorizacao_legada"])
 
         logout_response = self.client.post(self.logout_url, {}, format="json")
         self.assertEqual(logout_response.status_code, status.HTTP_200_OK)
@@ -191,7 +198,7 @@ class AuthSessionAdapterViewTests(APITestCase):
 
 class AuthLdapConfigViewTests(APITestCase):
     def setUp(self):
-        self.url = reverse("reabilita-auth-ldap-config")
+        self.url = reverse("cadfuncional-auth-ldap-config")
         self.staff = User.objects.create_user(username="admin.ldap", password="SenhaForte#123", is_staff=True)
         self.non_staff = User.objects.create_user(username="operador.ldap", password="SenhaForte#123", is_staff=False)
 
@@ -230,8 +237,8 @@ class AuthLdapConfigViewTests(APITestCase):
 
 class AuthUsuariosViewTests(APITestCase):
     def setUp(self):
-        self.list_url = reverse("reabilita-auth-usuarios-list")
-        self.new_url = reverse("reabilita-auth-usuarios-novo")
+        self.list_url = reverse("cadfuncional-auth-usuarios-list")
+        self.new_url = reverse("cadfuncional-auth-usuarios-novo")
         self.admin = User.objects.create_user(username="admin.users", password="SenhaForte#123", is_staff=True)
         self.client.force_login(self.admin)
 
@@ -261,7 +268,7 @@ class AuthUsuariosViewTests(APITestCase):
         self.assertEqual(list_response.status_code, status.HTTP_200_OK)
         self.assertTrue(any(item["id"] == created_id for item in list_response.data))
 
-        detail_url = reverse("reabilita-auth-usuario-detail", kwargs={"user_id": created_id})
+        detail_url = reverse("cadfuncional-auth-usuario-detail", kwargs={"user_id": created_id})
         detail_response = self.client.get(detail_url)
         self.assertEqual(detail_response.status_code, status.HTTP_200_OK)
         self.assertEqual(detail_response.data["cpf"], "12345678901")
@@ -279,7 +286,7 @@ class AuthUsuariosViewTests(APITestCase):
         self.assertEqual(patch_response.data["perfil"], "Instrutor")
         self.assertEqual(patch_response.data["is_active"], False)
 
-        reset_url = reverse("reabilita-auth-usuario-resetar-senha", kwargs={"user_id": created_id})
+        reset_url = reverse("cadfuncional-auth-usuario-resetar-senha", kwargs={"user_id": created_id})
         reset_response = self.client.post(reset_url, {}, format="json")
         self.assertEqual(reset_response.status_code, status.HTTP_200_OK)
         self.assertIn("detail", reset_response.data)
@@ -293,7 +300,7 @@ class AuthUsuariosViewTests(APITestCase):
 
 class AtendimentoListCreateViewTests(APITestCase):
     def setUp(self):
-        self.url = reverse("reabilita-saude-atendimentos")
+        self.url = reverse("cadfuncional-saude-atendimentos")
 
     def test_lista_vazia_por_padrao(self):
         response = self.client.get(self.url)
@@ -346,14 +353,14 @@ class AtendimentoListCreateViewTests(APITestCase):
 
 class AuthPasswordFlowsViewTests(APITestCase):
     def setUp(self):
-        self.mudar_senha_url = reverse("reabilita-auth-mudar-senha")
-        self.recuperar_senha_url = reverse("reabilita-auth-recuperar-senha")
+        self.mudar_senha_url = reverse("cadfuncional-auth-mudar-senha")
+        self.recuperar_senha_url = reverse("cadfuncional-auth-recuperar-senha")
         self.auth_user = User.objects.create_user(username="user.authpass", password="SenhaAntiga#123")
         self.admin = User.objects.create_user(username="admin.authpass", password="SenhaAdmin#123", is_staff=True)
         self.client.force_login(self.admin)
 
         create_response = self.client.post(
-            reverse("reabilita-auth-usuarios-novo"),
+            reverse("cadfuncional-auth-usuarios-novo"),
             {
                 "nome_completo": "Recuperar Senha",
                 "cpf": "98765432100",
@@ -411,8 +418,8 @@ class AuthPasswordFlowsViewTests(APITestCase):
 
 class EvolucaoListCreateViewTests(APITestCase):
     def setUp(self):
-        self.atendimentos_url = reverse("reabilita-saude-atendimentos")
-        self.url = reverse("reabilita-saude-evolucoes")
+        self.atendimentos_url = reverse("cadfuncional-saude-atendimentos")
+        self.url = reverse("cadfuncional-saude-evolucoes")
         atendimento_response = self.client.post(
             self.atendimentos_url,
             {
@@ -463,8 +470,8 @@ class EvolucaoListCreateViewTests(APITestCase):
 
 class AvaliacaoFisioterapiaSREDViewTests(APITestCase):
     def setUp(self):
-        self.atendimentos_url = reverse("reabilita-saude-atendimentos")
-        self.url = reverse("reabilita-saude-fisio-avaliacoes-sred")
+        self.atendimentos_url = reverse("cadfuncional-saude-atendimentos")
+        self.url = reverse("cadfuncional-saude-fisio-avaliacoes-sred")
         self.user = User.objects.create_user(username="fisioterapeuta.sred", password="SenhaFisio#123")
 
         atendimento_response = self.client.post(
@@ -523,7 +530,7 @@ class AvaliacaoFisioterapiaSREDViewTests(APITestCase):
 
         self.client.force_login(self.user)
         patch_response = self.client.patch(
-            reverse("reabilita-saude-fisio-avaliacoes-sred-detail", kwargs={"avaliacao_id": avaliacao_id}),
+            reverse("cadfuncional-saude-fisio-avaliacoes-sred-detail", kwargs={"avaliacao_id": avaliacao_id}),
             {
                 "liberado_para_pef": True,
                 "observacoes_liberacao_pef": "Liberado para retorno gradual supervisionado.",
@@ -534,3 +541,4 @@ class AvaliacaoFisioterapiaSREDViewTests(APITestCase):
         self.assertEqual(patch_response.data["liberado_para_pef"], True)
         self.assertEqual(patch_response.data["liberado_para_pef_por_username"], "fisioterapeuta.sred")
         self.assertIsNotNone(patch_response.data["liberado_para_pef_em"])
+

@@ -1,19 +1,21 @@
 from datetime import date
+import logging
 import re
 
 from django.utils import timezone
+from django.db import DatabaseError, connection
 from django.db.models import Count
 from django.db.models.functions import TruncMonth
 from django.contrib.auth import get_user_model
 from django.utils.dateparse import parse_date
 
 from .models import (
-    ReabilitaAtendimentoClinico,
-    ReabilitaAtendimentoSaude,
-    ReabilitaAvaliacaoFisioterapiaSRED,
-    ReabilitaEvolucaoMultidisciplinar,
-    ReabilitaLDAPConfig,
-    ReabilitaUsuarioPerfil,
+    CadfuncionalAtendimentoClinico,
+    CadfuncionalAtendimentoSaude,
+    CadfuncionalAvaliacaoFisioterapiaSRED,
+    CadfuncionalEvolucaoMultidisciplinar,
+    CadfuncionalLDAPConfig,
+    CadfuncionalUsuarioPerfil,
 )
 
 User = get_user_model()
@@ -26,6 +28,95 @@ DEFAULT_PERFIS = [
     "Nutricionista",
     "Psicopedagogo",
 ]
+
+logger = logging.getLogger(__name__)
+
+LEGACY_MODULE_SYSTEM_CODES = {
+    "cms": 26,
+    "cadfuncional": 27,
+}
+
+
+def _build_missing_access_payload(module: str, cod_sist: int | None, reason: str):
+    return {
+        "module": module,
+        "cod_sist": cod_sist,
+        "allowed": False,
+        "cod_pessoa": None,
+        "cod_ni": None,
+        "nivel": None,
+        "reason": reason,
+    }
+
+
+def _resolve_module_cod_sist(module: str):
+    return LEGACY_MODULE_SYSTEM_CODES.get((module or "").strip().lower())
+
+
+def build_legacy_module_access_payload(user, module: str):
+    cod_sist = _resolve_module_cod_sist(module)
+    if not cod_sist:
+        return _build_missing_access_payload(module, None, "module_not_mapped")
+
+    if not user or not user.is_authenticated:
+        return _build_missing_access_payload(module, cod_sist, "unauthenticated")
+
+    query = """
+    SELECT
+        uv.cod_pessoa,
+        ct.cod_ni,
+        ni.nivel
+    FROM principal.usuario_pessoa_vinculo uv
+    LEFT JOIN principal.ct_aces_sist_perif ct
+      ON ct.cod_pessoa = uv.cod_pessoa
+     AND ct.cod_sist = %s
+    LEFT JOIN principal.ni_aces_sist_perif ni
+      ON ni.cod_sist = ct.cod_sist
+     AND ni.cod_ni = ct.cod_ni
+    WHERE uv.usuario_id = %s
+      AND uv.ativo = TRUE
+    LIMIT 1
+    """
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(query, [cod_sist, user.id])
+            row = cursor.fetchone()
+    except DatabaseError:
+        logger.exception("Falha ao consultar autorizacao legada para modulo %s", module)
+        return _build_missing_access_payload(module, cod_sist, "authorization_source_unavailable")
+
+    if not row:
+        return _build_missing_access_payload(module, cod_sist, "user_not_linked_to_cod_pessoa")
+
+    cod_pessoa, cod_ni, nivel = row
+    if cod_ni is None:
+        return {
+            "module": module,
+            "cod_sist": cod_sist,
+            "allowed": False,
+            "cod_pessoa": cod_pessoa,
+            "cod_ni": None,
+            "nivel": None,
+            "reason": "missing_access_grant",
+        }
+
+    return {
+        "module": module,
+        "cod_sist": cod_sist,
+        "allowed": True,
+        "cod_pessoa": cod_pessoa,
+        "cod_ni": cod_ni,
+        "nivel": nivel,
+        "reason": "ok",
+    }
+
+
+def build_legacy_access_snapshot_payload(user):
+    return {
+        "cadfuncional": build_legacy_module_access_payload(user, "cadfuncional"),
+        "cms": build_legacy_module_access_payload(user, "cms"),
+    }
 
 
 def _month_window_6(base_date: date):
@@ -42,7 +133,7 @@ def _month_window_6(base_date: date):
 
 def build_painel_clinico_payload(base_date: date | None = None):
     today = base_date or date.today()
-    qs = ReabilitaAtendimentoClinico.objects.all()
+    qs = CadfuncionalAtendimentoClinico.objects.all()
 
     total_atendimentos = qs.count()
     total_cadetes = qs.values("cadete").distinct().count()
@@ -211,10 +302,10 @@ def build_atendimentos_referencias_payload():
 
 
 def _get_or_create_ldap_config():
-    config = ReabilitaLDAPConfig.objects.order_by("id").first()
+    config = CadfuncionalLDAPConfig.objects.order_by("id").first()
     if config:
         return config
-    return ReabilitaLDAPConfig.objects.create()
+    return CadfuncionalLDAPConfig.objects.create()
 
 
 def build_ldap_config_payload():
@@ -292,7 +383,7 @@ def _full_name_parts(full_name: str):
     return pieces[0], " ".join(pieces[1:])
 
 
-def _build_system_user_detail_payload(profile: ReabilitaUsuarioPerfil):
+def _build_system_user_detail_payload(profile: CadfuncionalUsuarioPerfil):
     user = profile.user
     return {
         "id": user.id,
@@ -312,7 +403,7 @@ def _build_system_user_detail_payload(profile: ReabilitaUsuarioPerfil):
     }
 
 
-def _build_system_user_create_payload(profile: ReabilitaUsuarioPerfil):
+def _build_system_user_create_payload(profile: CadfuncionalUsuarioPerfil):
     user = profile.user
     return {
         "id": user.id,
@@ -332,7 +423,7 @@ def _build_system_user_create_payload(profile: ReabilitaUsuarioPerfil):
 
 
 def list_system_users_payload():
-    profiles = ReabilitaUsuarioPerfil.objects.select_related("user").order_by("user__first_name", "user__last_name", "user__username")
+    profiles = CadfuncionalUsuarioPerfil.objects.select_related("user").order_by("user__first_name", "user__last_name", "user__username")
     return [_build_system_user_detail_payload(profile) for profile in profiles]
 
 
@@ -341,7 +432,7 @@ def create_system_user_payload(payload: dict):
     if len(cpf) != 11:
         raise ValueError("CPF invalido. Informe 11 digitos.")
 
-    if ReabilitaUsuarioPerfil.objects.filter(cpf=cpf).exists():
+    if CadfuncionalUsuarioPerfil.objects.filter(cpf=cpf).exists():
         raise ValueError("CPF ja cadastrado.")
 
     senha_inicial = payload.get("senha_inicial") or ""
@@ -373,7 +464,7 @@ def create_system_user_payload(payload: dict):
         is_staff=is_admin,
     )
 
-    profile = ReabilitaUsuarioPerfil.objects.create(
+    profile = CadfuncionalUsuarioPerfil.objects.create(
         user=user,
         cpf=cpf,
         perfil=perfil_nome,
@@ -388,21 +479,21 @@ def create_system_user_payload(payload: dict):
 
 
 def get_system_user_profile_or_none(user_id: int):
-    return ReabilitaUsuarioPerfil.objects.select_related("user").filter(user_id=user_id).first()
+    return CadfuncionalUsuarioPerfil.objects.select_related("user").filter(user_id=user_id).first()
 
 
-def get_system_user_detail_payload(profile: ReabilitaUsuarioPerfil):
+def get_system_user_detail_payload(profile: CadfuncionalUsuarioPerfil):
     return _build_system_user_detail_payload(profile)
 
 
-def update_system_user_payload(profile: ReabilitaUsuarioPerfil, payload: dict):
+def update_system_user_payload(profile: CadfuncionalUsuarioPerfil, payload: dict):
     user = profile.user
 
     if "cpf" in payload:
         cpf = _clean_cpf(payload.get("cpf") or "")
         if len(cpf) != 11:
             raise ValueError("CPF invalido. Informe 11 digitos.")
-        if ReabilitaUsuarioPerfil.objects.exclude(pk=profile.pk).filter(cpf=cpf).exists():
+        if CadfuncionalUsuarioPerfil.objects.exclude(pk=profile.pk).filter(cpf=cpf).exists():
             raise ValueError("CPF ja cadastrado.")
         profile.cpf = cpf
 
@@ -437,7 +528,7 @@ def update_system_user_payload(profile: ReabilitaUsuarioPerfil, payload: dict):
     return _build_system_user_detail_payload(profile)
 
 
-def reset_system_user_password_payload(profile: ReabilitaUsuarioPerfil):
+def reset_system_user_password_payload(profile: CadfuncionalUsuarioPerfil):
     user = profile.user
     temporary_password = f"Temp#{user.id:06d}"
     user.set_password(temporary_password)
@@ -469,7 +560,7 @@ def request_password_reset_payload(payload: dict):
     if len(cpf) != 11:
         raise ValueError("CPF invalido. Informe 11 digitos.")
 
-    profile = ReabilitaUsuarioPerfil.objects.select_related("user").filter(cpf=cpf).first()
+    profile = CadfuncionalUsuarioPerfil.objects.select_related("user").filter(cpf=cpf).first()
     if not profile:
         return {"detail": "Se o CPF estiver cadastrado, o reset de senha foi solicitado."}
 
@@ -480,7 +571,7 @@ def request_password_reset_payload(payload: dict):
     return {"detail": "Se o CPF estiver cadastrado, o reset de senha foi solicitado."}
 
 
-def _serialize_atendimento(item: ReabilitaAtendimentoSaude):
+def _serialize_atendimento(item: CadfuncionalAtendimentoSaude):
     return {
         "id": item.id,
         "data_registro": item.data_registro.isoformat() if item.data_registro else "",
@@ -515,7 +606,7 @@ def _serialize_atendimento(item: ReabilitaAtendimentoSaude):
 
 
 def list_saude_atendimentos_payload():
-    return [_serialize_atendimento(item) for item in ReabilitaAtendimentoSaude.objects.all()]
+    return [_serialize_atendimento(item) for item in CadfuncionalAtendimentoSaude.objects.all()]
 
 
 def create_saude_atendimento_payload(payload: dict):
@@ -534,7 +625,7 @@ def create_saude_atendimento_payload(payload: dict):
         if field not in payload:
             raise ValueError(f"Campo obrigatorio ausente: {field}")
 
-    item = ReabilitaAtendimentoSaude.objects.create(
+    item = CadfuncionalAtendimentoSaude.objects.create(
         cadete_id=int(payload.get("cadete_id")),
         cadete_nr_militar=str(payload.get("cadete_nr_militar") or ""),
         cadete_nome_guerra=str(payload.get("cadete_nome_guerra") or ""),
@@ -565,7 +656,7 @@ def create_saude_atendimento_payload(payload: dict):
     )
 
     # Keep painel clinico aggregates coherent with new atendimentos records.
-    ReabilitaAtendimentoClinico.objects.create(
+    CadfuncionalAtendimentoClinico.objects.create(
         cadete=item.cadete_nome_guerra or f"Cadete {item.cadete_id}",
         data_atendimento=item.data_registro,
         tipo="retorno" if str(item.tipo_atendimento).lower() == "retorno" else "inicial",
@@ -579,7 +670,7 @@ def create_saude_atendimento_payload(payload: dict):
     return _serialize_atendimento(item)
 
 
-def _serialize_evolucao(item: ReabilitaEvolucaoMultidisciplinar):
+def _serialize_evolucao(item: CadfuncionalEvolucaoMultidisciplinar):
     return {
         "id": item.id,
         "atendimento_id": item.atendimento_id,
@@ -590,7 +681,7 @@ def _serialize_evolucao(item: ReabilitaEvolucaoMultidisciplinar):
 
 
 def list_saude_evolucoes_payload(atendimento_id: int | None = None):
-    qs = ReabilitaEvolucaoMultidisciplinar.objects.all()
+    qs = CadfuncionalEvolucaoMultidisciplinar.objects.all()
     if atendimento_id is not None:
         qs = qs.filter(atendimento_id=atendimento_id)
     return [_serialize_evolucao(item) for item in qs]
@@ -603,7 +694,7 @@ def create_saude_evolucao_payload(payload: dict):
             raise ValueError(f"Campo obrigatorio ausente: {field}")
 
     atendimento_id = int(payload.get("atendimento_id"))
-    atendimento = ReabilitaAtendimentoSaude.objects.filter(id=atendimento_id).first()
+    atendimento = CadfuncionalAtendimentoSaude.objects.filter(id=atendimento_id).first()
     if not atendimento:
         raise ValueError("Atendimento informado nao encontrado.")
 
@@ -612,7 +703,7 @@ def create_saude_evolucao_payload(payload: dict):
     if data_evolucao is None:
         raise ValueError("Campo data_evolucao invalido. Use formato YYYY-MM-DD.")
 
-    item = ReabilitaEvolucaoMultidisciplinar.objects.create(
+    item = CadfuncionalEvolucaoMultidisciplinar.objects.create(
         atendimento=atendimento,
         profissional_id=int(payload.get("profissional_id")),
         parecer_tecnico=str(payload.get("parecer_tecnico") or ""),
@@ -625,7 +716,7 @@ SRED_REATIVIDADE_OPTIONS = ["Baixa", "Moderada", "Alta"]
 SRED_ETIOLOGIA_OPTIONS = ["Traumatica", "Degenerativa", "Sobrecarga (Overuse)", "Pos-operatoria", "Idiopatica"]
 
 
-def _serialize_avaliacao_sred(item: ReabilitaAvaliacaoFisioterapiaSRED):
+def _serialize_avaliacao_sred(item: CadfuncionalAvaliacaoFisioterapiaSRED):
     atendimento = item.atendimento
     return {
         "id": item.id,
@@ -660,7 +751,7 @@ def _serialize_avaliacao_sred(item: ReabilitaAvaliacaoFisioterapiaSRED):
 
 
 def list_saude_avaliacoes_sred_payload(atendimento_id: int | None = None):
-    qs = ReabilitaAvaliacaoFisioterapiaSRED.objects.select_related("atendimento").all()
+    qs = CadfuncionalAvaliacaoFisioterapiaSRED.objects.select_related("atendimento").all()
     if atendimento_id is not None:
         qs = qs.filter(atendimento_id=atendimento_id)
     return [_serialize_avaliacao_sred(item) for item in qs]
@@ -673,7 +764,7 @@ def create_saude_avaliacao_sred_payload(payload: dict):
             raise ValueError(f"Campo obrigatorio ausente: {field}")
 
     atendimento_id = int(payload.get("atendimento_id"))
-    atendimento = ReabilitaAtendimentoSaude.objects.filter(id=atendimento_id).first()
+    atendimento = CadfuncionalAtendimentoSaude.objects.filter(id=atendimento_id).first()
     if not atendimento:
         raise ValueError("Atendimento informado nao encontrado.")
 
@@ -689,7 +780,7 @@ def create_saude_avaliacao_sred_payload(payload: dict):
     if data_avaliacao is None:
         raise ValueError("Campo data_avaliacao invalido. Use formato YYYY-MM-DD.")
 
-    item = ReabilitaAvaliacaoFisioterapiaSRED.objects.create(
+    item = CadfuncionalAvaliacaoFisioterapiaSRED.objects.create(
         atendimento=atendimento,
         fisioterapeuta_id=int(payload.get("fisioterapeuta_id")),
         gravidade_eva=int(payload.get("gravidade_eva")),
@@ -719,10 +810,10 @@ def create_saude_avaliacao_sred_payload(payload: dict):
 
 
 def get_saude_avaliacao_sred_or_none(avaliacao_id: int):
-    return ReabilitaAvaliacaoFisioterapiaSRED.objects.select_related("atendimento").filter(id=avaliacao_id).first()
+    return CadfuncionalAvaliacaoFisioterapiaSRED.objects.select_related("atendimento").filter(id=avaliacao_id).first()
 
 
-def update_saude_avaliacao_sred_payload(item: ReabilitaAvaliacaoFisioterapiaSRED, payload: dict, acting_user=None):
+def update_saude_avaliacao_sred_payload(item: CadfuncionalAvaliacaoFisioterapiaSRED, payload: dict, acting_user=None):
     if "gravidade_eva" in payload:
         item.gravidade_eva = int(payload.get("gravidade_eva"))
 
@@ -777,3 +868,4 @@ def update_saude_avaliacao_sred_payload(item: ReabilitaAvaliacaoFisioterapiaSRED
 
     item.save()
     return _serialize_avaliacao_sred(item)
+

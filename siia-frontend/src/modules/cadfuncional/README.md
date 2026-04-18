@@ -1,4 +1,4 @@
-# Reabilita Frontend (bootstrap inicial)
+# CadFuncional Frontend (bootstrap inicial)
 
 Estrutura inicial criada para React + TypeScript integrada ao design system existente.
 
@@ -31,10 +31,10 @@ Estrutura inicial criada para React + TypeScript integrada ao design system exis
 ## Configuração local (frontend + backend protegido)
 
 Para desenvolvimento local com backend em `localhost:8000` e endpoints protegidos, crie
-`reabilita-frontend/.env.development.local` com:
+`cadfuncional-frontend/.env.development.local` com:
 
 ```env
-VITE_API_BASE_URL=/api/v1
+VITE_API_BASE_URL=/api/cadfuncional
 VITE_PROXY_TARGET=http://localhost:8000
 VITE_API_BASIC_AUTH_HEADER=Basic <base64_de_usuario:senha>
 ```

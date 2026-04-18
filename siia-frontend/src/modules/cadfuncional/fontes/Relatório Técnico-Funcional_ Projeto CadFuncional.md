@@ -1,8 +1,8 @@
-### Relatório Técnico-Funcional: Projeto Reabilita
+### Relatório Técnico-Funcional: Projeto CadFuncional
 
 ##### 1\. Visão Geral e Justificativa do Projeto
 
-O Projeto Reabilita tem como objetivo central oferecer um atendimento clínico-funcional especializado aos pacientes, visando restabelecer e otimizar suas condições físicas para o cumprimento das demandas da Saúde. A proposta fundamenta-se na estruturação de uma equipe multidisciplinar capaz de realizar diagnósticos precisos e intervenções precoces, focando na identificação das causas raízes das fragilidades físicas para aplicar protocolos de prevenção e reabilitação qualificada.A implementação deste projeto é justificada pelas seguintes fragilidades identificadas:
+O Projeto CadFuncional tem como objetivo central oferecer um atendimento clínico-funcional especializado aos pacientes, visando restabelecer e otimizar suas condições físicas para o cumprimento das demandas da Saúde. A proposta fundamenta-se na estruturação de uma equipe multidisciplinar capaz de realizar diagnósticos precisos e intervenções precoces, focando na identificação das causas raízes das fragilidades físicas para aplicar protocolos de prevenção e reabilitação qualificada.A implementação deste projeto é justificada pelas seguintes fragilidades identificadas:
 
 * Elevado volume de pacientes apresentando lesões ortopédicas e fragilidades físicas recorrentes.  
 * Incapacidade temporária frequente para o desempenho de atividades devido a lesões evitáveis.  
@@ -120,4 +120,5 @@ A implementação seguirá o cronograma técnico estabelecido pela Gestão de Pr
 2. **Design de Interface (UI/UX):**  Criação de layout focado em usabilidade clínica e agilidade de preenchimento para equipes de campo.  
 3. **Migração e ETL:**  Extração, transformação e carga dos dados da planilha piloto projeto\_saude.xlsm para o ambiente PostgreSQL produtivo.  
 4. **Lançamento da Landing Page:**  Centralização do acesso ao sistema e disponibilização de manuais de protocolo multidisciplinar.
+
 

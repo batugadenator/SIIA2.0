@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .services import (
+    build_legacy_access_snapshot_payload,
     build_atendimentos_referencias_payload,
     build_ldap_config_payload,
     build_painel_clinico_payload,
@@ -36,10 +37,11 @@ def _build_auth_session_payload(user):
         return {
             "is_authenticated": False,
             "user": None,
+            "autorizacao_legada": None,
         }
 
-    # Map Django user flags to Reabilita profile for SIIA integration.
-    # Full per-user profile mapping will be done when the Reabilita user model
+    # Map Django user flags to CadFuncional profile for SIIA integration.
+    # Full per-user profile mapping will be done when the CadFuncional user model
     # is consolidated with the SIIA Usuario model.
     perfil = "Administrador" if user.is_staff else "Operador"
 
@@ -53,6 +55,7 @@ def _build_auth_session_payload(user):
             "is_staff": user.is_staff,
             "perfil": perfil,
         },
+        "autorizacao_legada": build_legacy_access_snapshot_payload(user),
     }
 
 
@@ -60,7 +63,7 @@ class HealthView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        return Response({"module": "reabilita", "status": "ok"})
+        return Response({"module": "cadfuncional", "status": "ok"})
 
 
 class PainelClinicoView(APIView):

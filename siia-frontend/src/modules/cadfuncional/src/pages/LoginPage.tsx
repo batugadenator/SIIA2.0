@@ -27,7 +27,7 @@ export const LoginPage = () => {
 	const { isReady, isAuthenticated, isAuthenticating, loginError, login } = useAuth();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const [logoSrc, setLogoSrc] = useState('/logo-reabilita-aman.png');
+	const [logoSrc, setLogoSrc] = useState('/logo-cadfuncional-aman.png');
 
 	useEffect(() => {
 		if (isReady && isAuthenticated) {

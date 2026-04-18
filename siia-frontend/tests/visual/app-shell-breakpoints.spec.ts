@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 const AUTH_ROUTES = [
   '/dashboard',
-  '/dashboard/reabilita',
+  '/dashboard/cadfuncional',
   '/dashboard/siagg',
   '/dashboard/cms',
   '/dashboard/legados',

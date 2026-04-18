@@ -13,7 +13,7 @@ import { createAppTheme, DesignSystemProvider } from '../design-system';
 import { AuthProvider } from './AuthProvider';
 
 const queryClient = new QueryClient();
-const themeStorageKey = 'reabilita_theme_mode';
+const themeStorageKey = 'cadfuncional_theme_mode';
 
 interface ThemeModeContextValue {
 	mode: PaletteMode;

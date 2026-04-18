@@ -1,6 +1,6 @@
-Este **Plano de Desenvolvimento do Sistema Reabilita** foi estruturado com base nas diretrizes do Projeto Cadete Funcional, integrando as missões da equipe multidisciplinar com as regras de negócio e requisitos técnicos estabelecidos.
+Este **Plano de Desenvolvimento do Sistema CadFuncional** foi estruturado com base nas diretrizes do Projeto Cadete Funcional, integrando as missões da equipe multidisciplinar com as regras de negócio e requisitos técnicos estabelecidos.
 
-# Plano de Desenvolvimento do Sistema Reabilita
+# Plano de Desenvolvimento do Sistema CadFuncional
 
 ## 1\. Visão Geral e Objetivos
 
@@ -10,21 +10,21 @@ O objetivo central é mitigar as fragilidades físicas dos cadetes da AMAN, redu
 
 A aplicação será dividida em duas frentes principais, seguindo o padrão de separação entre cliente e servidor:
 
-### 2.1. reabilita-backend (Django)
+### 2.1. cadfuncional-backend (Django)
 
 * **Linguagem:** Python (.py).  
 * **Responsabilidades:** Gestão de banco de dados, autenticação de usuários, lógica de negócio (gatilhos e protocolos) e fornecimento de API para o frontend.  
 * **Configurações:** Uso de YAML/JSON para variáveis de ambiente e definições de sistema.
 
-### 2.2. reabilita-frontend (Web)
+### 2.2. cadfuncional-frontend (Web)
 
 * **Linguagem:** TypeScript/TSX (.ts/.tsx), HTML e CSS/SCSS.  
 * **Responsividade:** Design obrigatório para tablets e celulares, garantindo que instrutores e médicos possam registrar dados em campo Histórico.  
-* **Design System:** Localizado em reabilita\\reabilita-frontend\\src\\design-system, será a única fonte de verdade para a interface (UI/UX).
+* **Design System:** Localizado em cadfuncional\\cadfuncional-frontend\\src\\design-system, será a única fonte de verdade para a interface (UI/UX).
 
 ## 3\. Modelagem de Dados (PostgreSQL)
 
-O banco de dados será construído a partir das referências documentais e arquivos .csv localizados em reabilita\\reabilita-backend\\dados.
+O banco de dados será construído a partir das referências documentais e arquivos .csv localizados em cadfuncional\\cadfuncional-backend\\dados.
 
 ### 3.1. Esquema pessoal
 
@@ -43,7 +43,7 @@ O banco de dados será construído a partir das referências documentais e arqui
 * **Regra de Negócio:** O sistema impede o salvamento de atendimentos se o campo "Médico" não for informado, emitindo o alerta: **"Não esqueça de informar o Médico\!\!\!"** 11\.  
 * **Diagnóstico Ortopédico:** Uso do Capítulo XIII (M00-M99) e Capítulo XIX (S00-T98) para traumatismos 1, Histórico.  
 * **Gatilho S-RED:** Se selecionado "Lesão: Óssea" \+ "Origem: Por Estresse" (ou CID-10 M84.3), o sistema ativa automaticamente o protocolo multidisciplinar de S-RED 12, 13\. Nessa condição, no Campo 2 é exibido o campo **Decisão S-RED**, com seleção obrigatória entre **S-RED Positivo** e **S-RED Negativo**.
-* **Campo 2 (Classificação da Lesão) orientado por catálogo:** os campos **Tipo**, **Origem da Lesão**, **Parte do Corpo**, **Parte Lesionada** e **Local da Lesão** devem ser preenchidos por seleção em cadeia a partir dos catálogos oficiais carregados no backend (`dados/reabilita`). Não deve haver preenchimento manual nesses campos de seleção. Quando não existir sublocalização específica para um item anatômico, o sistema utiliza a própria referência da estrutura como opção de local. Checkboxes permanecem como entradas de marcação múltipla.
+* **Campo 2 (Classificação da Lesão) orientado por catálogo:** os campos **Tipo**, **Origem da Lesão**, **Parte do Corpo**, **Parte Lesionada** e **Local da Lesão** devem ser preenchidos por seleção em cadeia a partir dos catálogos oficiais carregados no backend (`dados/cadfuncional`). Não deve haver preenchimento manual nesses campos de seleção. Quando não existir sublocalização específica para um item anatômico, o sistema utiliza a própria referência da estrutura como opção de local. Checkboxes permanecem como entradas de marcação múltipla.
 
 ### 4.2. Módulo de Reabilitação (Fisioterapia e Educador Físico)
 
@@ -70,8 +70,8 @@ O sistema deve gerar visualizações automáticas via React/Vue:
 
 ## 7\. Fonte de Verdade e Rastreabilidade
 
-* **Fonte de verdade técnica (backend):** `reabilita-backend/dados/modelagem_dados.md` define o contrato funcional de catálogo para o Campo 2 do Novo Atendimento (`tipo_lesao`, `origem_lesao`, `segmento_corporal`, `estrutura_anatomica`, `localizacao_lesao`).
-* **Rastreabilidade de referência:** os catálogos de seleção são carregados a partir de `reabilita-backend/dados/reabilita/*.csv`, com priorização do modelo normalizado de referências no backend.
+* **Fonte de verdade técnica (backend):** `cadfuncional-backend/dados/modelagem_dados.md` define o contrato funcional de catálogo para o Campo 2 do Novo Atendimento (`tipo_lesao`, `origem_lesao`, `segmento_corporal`, `estrutura_anatomica`, `localizacao_lesao`).
+* **Rastreabilidade de referência:** os catálogos de seleção são carregados a partir de `cadfuncional-backend/dados/cadfuncional/*.csv`, com priorização do modelo normalizado de referências no backend.
 * **Consistência frontend-backend:** alterações na hierarquia de seleção clínica devem ser refletidas simultaneamente neste plano e no documento de modelagem do backend para evitar divergência de regra de negócio.
 
 Este plano transforma o "rascunho incipiente" em uma plataforma robusta de **Saúde Militar**, garantindo que a AMAN possua dados confiáveis para a tomada de decisão estratégica sobre a prontidão física e intelectual de seu corpo de cadetes 20, 21\.  

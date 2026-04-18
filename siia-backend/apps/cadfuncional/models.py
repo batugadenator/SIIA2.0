@@ -1,15 +1,15 @@
 from django.db import models
 
 
-class ReabilitaRegistro(models.Model):
+class CadfuncionalRegistro(models.Model):
     nome = models.CharField(max_length=120)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "reabilita_registro"
+        db_table = "cadfuncional_registro"
 
 
-class ReabilitaAtendimentoClinico(models.Model):
+class CadfuncionalAtendimentoClinico(models.Model):
     cadete = models.CharField(max_length=120)
     sexo = models.CharField(max_length=20, blank=True, default="")
     data_atendimento = models.DateField(db_index=True)
@@ -22,10 +22,10 @@ class ReabilitaAtendimentoClinico(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "reabilita_atendimento_clinico"
+        db_table = "cadfuncional_atendimento_clinico"
 
 
-class ReabilitaLDAPConfig(models.Model):
+class CadfuncionalLDAPConfig(models.Model):
     enabled = models.BooleanField(default=False)
     server_uri = models.CharField(max_length=255, blank=True, default="")
     bind_dn = models.CharField(max_length=255, blank=True, default="")
@@ -54,10 +54,10 @@ class ReabilitaLDAPConfig(models.Model):
     )
 
     class Meta:
-        db_table = "reabilita_ldap_config"
+        db_table = "cadfuncional_ldap_config"
 
 
-class ReabilitaUsuarioPerfil(models.Model):
+class CadfuncionalUsuarioPerfil(models.Model):
     user = models.OneToOneField(
         "usuarios.Usuario",
         on_delete=models.CASCADE,
@@ -75,10 +75,10 @@ class ReabilitaUsuarioPerfil(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = "reabilita_usuario_perfil"
+        db_table = "cadfuncional_usuario_perfil"
 
 
-class ReabilitaAtendimentoSaude(models.Model):
+class CadfuncionalAtendimentoSaude(models.Model):
     data_registro = models.DateField(auto_now_add=True)
     cadete_id = models.PositiveIntegerField()
     cadete_nr_militar = models.CharField(max_length=40, blank=True, default="")
@@ -110,13 +110,13 @@ class ReabilitaAtendimentoSaude(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "reabilita_atendimento_saude"
+        db_table = "cadfuncional_atendimento_saude"
         ordering = ["-data_registro", "-id"]
 
 
-class ReabilitaEvolucaoMultidisciplinar(models.Model):
+class CadfuncionalEvolucaoMultidisciplinar(models.Model):
     atendimento = models.ForeignKey(
-        ReabilitaAtendimentoSaude,
+        CadfuncionalAtendimentoSaude,
         on_delete=models.CASCADE,
         related_name="evolucoes",
     )
@@ -126,13 +126,13 @@ class ReabilitaEvolucaoMultidisciplinar(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "reabilita_evolucao_multidisciplinar"
+        db_table = "cadfuncional_evolucao_multidisciplinar"
         ordering = ["-data_evolucao", "-id"]
 
 
-class ReabilitaAvaliacaoFisioterapiaSRED(models.Model):
+class CadfuncionalAvaliacaoFisioterapiaSRED(models.Model):
     atendimento = models.ForeignKey(
-        ReabilitaAtendimentoSaude,
+        CadfuncionalAtendimentoSaude,
         on_delete=models.CASCADE,
         related_name="avaliacoes_sred",
     )
@@ -161,5 +161,6 @@ class ReabilitaAvaliacaoFisioterapiaSRED(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "reabilita_avaliacao_fisioterapia_sred"
+        db_table = "cadfuncional_avaliacao_fisioterapia_sred"
         ordering = ["-data_avaliacao", "-id"]
+

@@ -11,7 +11,7 @@ function resolveToolIcon(card: LaunchpadApp): string {
   const iconFromApi = (card.icon || "").trim();
 
   const iconMap: Record<string, string> = {
-    reabilita: "fas fa-stethoscope",
+    cadfuncional: "fas fa-stethoscope",
     siagg: "fas fa-folder-open",
     cms: "fas fa-edit",
     "legados-hub": "fas fa-toolbox",

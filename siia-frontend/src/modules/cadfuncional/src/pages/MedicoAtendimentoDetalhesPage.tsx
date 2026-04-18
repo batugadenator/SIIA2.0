@@ -251,7 +251,7 @@ export const MedicoAtendimentoDetalhesPage = () => {
 				action={
 					<Button
 						startIcon={<ArrowBackIcon />}
-						onClick={() => navigate('/dashboard/reabilita/medico')}
+						onClick={() => navigate('/dashboard/cadfuncional/medico')}
 						sx={{ minHeight: 44 }}
 					>
 						Voltar
@@ -271,7 +271,7 @@ export const MedicoAtendimentoDetalhesPage = () => {
 			<Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems={{ sm: 'center' }}>
 				<Button
 					startIcon={<ArrowBackIcon />}
-					onClick={() => navigate('/dashboard/reabilita/medico')}
+					onClick={() => navigate('/dashboard/cadfuncional/medico')}
 					sx={{ minHeight: 44, alignSelf: 'flex-start' }}
 				>
 					Voltar

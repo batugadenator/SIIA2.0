@@ -4,7 +4,7 @@ Estrutura pronta para reutilização em outra aplicação React + TypeScript + M
 
 ## Fundamentos visuais
 
-O padrão visual do ecossistema SIIA deve ser consistente em toda a área logada e derivar da identidade do Reabilita, com a paleta azul como referência principal. A composição deve privilegiar contraste, hierarquia e legibilidade, sem depender de efeitos decorativos para sustentar a estrutura da interface.
+O padrão visual do ecossistema SIIA deve ser consistente em toda a área logada e derivar da identidade do CadFuncional, com a paleta azul como referência principal. A composição deve privilegiar contraste, hierarquia e legibilidade, sem depender de efeitos decorativos para sustentar a estrutura da interface.
 
 Diretrizes essenciais:
 

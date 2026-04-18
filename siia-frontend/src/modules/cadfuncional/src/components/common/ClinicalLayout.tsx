@@ -35,7 +35,7 @@ const isCurrentRoute = (currentPath: string, targetPath: string): boolean => {
 	return currentPath === targetPath;
 };
 
-const REABILITA_BASE = '/dashboard/reabilita';
+const CADFUNCIONAL_BASE = '/dashboard/cadfuncional';
 
 export const ClinicalLayout = () => {
 	const navigate = useNavigate();
@@ -87,12 +87,12 @@ export const ClinicalLayout = () => {
 						px={2}
 						py={2}
 						component={RouterLink}
-						to={REABILITA_BASE}
+						to={CADFUNCIONAL_BASE}
 						sx={{ textDecoration: 'none', color: 'inherit', width: 'fit-content' }}
 					>
 						<Box
 							component="img"
-							src="/logo-reabilita-aman.png"
+							src="/logo-cadfuncional-aman.png"
 							alt="Logotipo Cadete Funcional"
 							sx={{ width: 40, height: 40, objectFit: 'contain' }}
 						/>
@@ -132,8 +132,8 @@ export const ClinicalLayout = () => {
 							<ListItem disablePadding>
 								<ListItemButton
 									component={RouterLink}
-									to={REABILITA_BASE}
-									selected={isCurrentRoute(location.pathname, REABILITA_BASE)}
+									to={CADFUNCIONAL_BASE}
+									selected={isCurrentRoute(location.pathname, CADFUNCIONAL_BASE)}
 									sx={{ minHeight: 44 }}
 								>
 									<ListItemIcon>
@@ -156,8 +156,8 @@ export const ClinicalLayout = () => {
 							<ListItem disablePadding>
 								<ListItemButton
 									component={RouterLink}
-									to={`${REABILITA_BASE}/cadetes-pacientes`}
-									selected={isCurrentRoute(location.pathname, `${REABILITA_BASE}/cadetes-pacientes`)}
+									to={`${CADFUNCIONAL_BASE}/cadetes-pacientes`}
+									selected={isCurrentRoute(location.pathname, `${CADFUNCIONAL_BASE}/cadetes-pacientes`)}
 									sx={{ minHeight: 44 }}
 								>
 									<ListItemIcon>
@@ -180,8 +180,8 @@ export const ClinicalLayout = () => {
 							<ListItem disablePadding>
 								<ListItemButton
 									component={RouterLink}
-									to={`${REABILITA_BASE}/medico`}
-									selected={isCurrentRoute(location.pathname, `${REABILITA_BASE}/medico`)}
+									to={`${CADFUNCIONAL_BASE}/medico`}
+									selected={isCurrentRoute(location.pathname, `${CADFUNCIONAL_BASE}/medico`)}
 									sx={{ minHeight: 44 }}
 								>
 									<ListItemIcon>
@@ -196,8 +196,8 @@ export const ClinicalLayout = () => {
 							<ListItem disablePadding>
 								<ListItemButton
 									component={RouterLink}
-									to={`${REABILITA_BASE}/fisioterapia`}
-									selected={isCurrentRoute(location.pathname, `${REABILITA_BASE}/fisioterapia`)}
+									to={`${CADFUNCIONAL_BASE}/fisioterapia`}
+									selected={isCurrentRoute(location.pathname, `${CADFUNCIONAL_BASE}/fisioterapia`)}
 									sx={{ minHeight: 44 }}
 								>
 									<ListItemIcon>
@@ -212,8 +212,8 @@ export const ClinicalLayout = () => {
 							<ListItem disablePadding>
 								<ListItemButton
 									component={RouterLink}
-									to={`${REABILITA_BASE}/educador-fisico`}
-									selected={isCurrentRoute(location.pathname, `${REABILITA_BASE}/educador-fisico`)}
+									to={`${CADFUNCIONAL_BASE}/educador-fisico`}
+									selected={isCurrentRoute(location.pathname, `${CADFUNCIONAL_BASE}/educador-fisico`)}
 									sx={{ minHeight: 44 }}
 								>
 									<ListItemIcon>
@@ -228,8 +228,8 @@ export const ClinicalLayout = () => {
 							<ListItem disablePadding>
 								<ListItemButton
 									component={RouterLink}
-									to={`${REABILITA_BASE}/nutricao`}
-									selected={isCurrentRoute(location.pathname, `${REABILITA_BASE}/nutricao`)}
+									to={`${CADFUNCIONAL_BASE}/nutricao`}
+									selected={isCurrentRoute(location.pathname, `${CADFUNCIONAL_BASE}/nutricao`)}
 									sx={{ minHeight: 44 }}
 								>
 									<ListItemIcon>
@@ -244,8 +244,8 @@ export const ClinicalLayout = () => {
 							<ListItem disablePadding>
 								<ListItemButton
 									component={RouterLink}
-									to={`${REABILITA_BASE}/psicopedagogia`}
-									selected={isCurrentRoute(location.pathname, `${REABILITA_BASE}/psicopedagogia`)}
+									to={`${CADFUNCIONAL_BASE}/psicopedagogia`}
+									selected={isCurrentRoute(location.pathname, `${CADFUNCIONAL_BASE}/psicopedagogia`)}
 									sx={{ minHeight: 44 }}
 								>
 									<ListItemIcon>
@@ -260,8 +260,8 @@ export const ClinicalLayout = () => {
 							<ListItem disablePadding>
 								<ListItemButton
 									component={RouterLink}
-									to={`${REABILITA_BASE}/instrutor`}
-									selected={isCurrentRoute(location.pathname, `${REABILITA_BASE}/instrutor`)}
+									to={`${CADFUNCIONAL_BASE}/instrutor`}
+									selected={isCurrentRoute(location.pathname, `${CADFUNCIONAL_BASE}/instrutor`)}
 									sx={{ minHeight: 44 }}
 								>
 									<ListItemIcon>
@@ -276,8 +276,8 @@ export const ClinicalLayout = () => {
 							<ListItem disablePadding>
 								<ListItemButton
 									component={RouterLink}
-									to={`${REABILITA_BASE}/sred`}
-									selected={isCurrentRoute(location.pathname, `${REABILITA_BASE}/sred`)}
+									to={`${CADFUNCIONAL_BASE}/sred`}
+									selected={isCurrentRoute(location.pathname, `${CADFUNCIONAL_BASE}/sred`)}
 									sx={{ minHeight: 44 }}
 								>
 									<ListItemIcon>
@@ -300,8 +300,8 @@ export const ClinicalLayout = () => {
 							<ListItem disablePadding>
 								<ListItemButton
 									component={RouterLink}
-									to={`${REABILITA_BASE}/configuracoes-gerais`}
-									selected={isCurrentRoute(location.pathname, `${REABILITA_BASE}/configuracoes-gerais`)}
+									to={`${CADFUNCIONAL_BASE}/configuracoes-gerais`}
+									selected={isCurrentRoute(location.pathname, `${CADFUNCIONAL_BASE}/configuracoes-gerais`)}
 									sx={{ minHeight: 44 }}
 								>
 									<ListItemIcon>
@@ -324,8 +324,8 @@ export const ClinicalLayout = () => {
 							<ListItem disablePadding>
 								<ListItemButton
 									component={RouterLink}
-									to={`${REABILITA_BASE}/minha-conta`}
-									selected={isCurrentRoute(location.pathname, `${REABILITA_BASE}/minha-conta`)}
+									to={`${CADFUNCIONAL_BASE}/minha-conta`}
+									selected={isCurrentRoute(location.pathname, `${CADFUNCIONAL_BASE}/minha-conta`)}
 									sx={{ minHeight: 44 }}
 								>
 									<ListItemIcon>
@@ -374,7 +374,7 @@ export const ClinicalLayout = () => {
 								<Button
 									variant="contained"
 									component={RouterLink}
-										to={`${REABILITA_BASE}/atendimentos/novo`}
+										to={`${CADFUNCIONAL_BASE}/atendimentos/novo`}
 									sx={{ minHeight: 44, minWidth: 44 }}
 								>
 									+ Novo Atendimento
