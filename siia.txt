@@ -3,3 +3,4 @@ Host: localhost
 DB_NAME: siia
 DBU_SER: siia
 DB_PASSWORD: highlighter
+#Token github: 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
