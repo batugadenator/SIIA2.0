@@ -4,3 +4,96 @@ DB_NAME: siia
 DBU_SER: siia
 DB_PASSWORD: highlighter
 #Token github: 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
+
+#Conteúdo arquivo Caddyfile:
+# Caddyfile — bloco a adicionar na configuração do Caddy existente
+#
+# Cenário: IP puro 192.168.3.60, sem DNS, sem TLS automático.
+# Caddy está na rede externa do proxy e roteia tráfego para os containers do Reabilita e do SIAGG.
+#
+# Como usar:
+#   1. Adicione este bloco ao Caddyfile do seu container Caddy (ou importe-o com `import`).
+#   2. Faça reload do Caddy: docker exec <caddy-container> caddy reload --config /etc/caddy/Caddyfile
+#
+# Pré-requisitos no docker-compose do Reabilita e do SIAGG:
+#   - container_name: reabilita-backend  (porta 8000)
+#   - container_name: reabilita-frontend (porta 80)
+#   - container_name: siagg-backend (porta 8000)
+#   - container_name: siagg-frontend (porta 80)
+#   - Todos conectados à mesma rede external do Caddy
+
+http://192.168.3.60 {
+    # Logs de acesso (opcional – remova se o Caddy pai já centraliza)
+    log {
+        output file /var/log/caddy/reabilita-access.log
+        level  INFO
+    }
+
+    # ── SIAGG ────────────────────────────────────────────────────────────────
+    handle /siagg-backend {
+        redir /siagg-backend/ 308
+    }
+
+    handle /siagg {
+        redir /siagg/ 308
+    }
+
+    handle_path /siagg-backend/* {
+        reverse_proxy siagg-backend:8000
+    }
+
+    handle_path /siagg/* {
+        reverse_proxy siagg-frontend:80
+    }
+
+    # ── Reabilita: API REST, admin Django e arquivos estáticos ──────────────
+    handle /api/* {
+        reverse_proxy reabilita-backend:8000
+    }
+
+    handle /admin/* {
+        reverse_proxy reabilita-backend:8000
+    }
+
+    handle /static/* {
+        reverse_proxy reabilita-backend:8000
+    }
+
+    # ── Frontend do Reabilita: SPA React (tudo o mais) ──────────────────────
+    handle {
+        reverse_proxy reabilita-frontend:80
+    }
+}
+
+# ─── HTTPS com certificado interno (auto-assinado pelo Caddy) ────────────────
+# Descomente abaixo SOMENTE se quiser HTTPS no IP puro.
+# O browser exibirá aviso de certificado não confiável até que o CA interno
+# seja importado nas máquinas clientes.
+#
+# https://192.168.3.60 {
+#     tls internal
+#     handle /api/* {
+#         reverse_proxy reabilita-backend:8000
+#     }
+#     handle /admin/* {
+#         reverse_proxy reabilita-backend:8000
+#     }
+#     handle /static/* {
+#         reverse_proxy reabilita-backend:8000
+#     }
+#     handle {
+#         reverse_proxy reabilita-frontend:80
+#     }
+# }
+#
+# http://192.168.3.60 {
+#     redir https://192.168.3.60{uri} permanent
+
+    # ── SIAGG ────────────────────────────────────────────────────────────────
+    handle /siagg-backend {
+        redir /siagg-backend/ 308
+    }
+
+    handle /siagg {
+        redir /siagg/ 308
+#     redir https://192.168.3.60{uri} permanent

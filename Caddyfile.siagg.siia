@@ -1,28 +1,33 @@
 http://192.168.3.60 {
-	handle /siagg-backend {
-		redir /siagg-backend/ 308
+	# ── Logs de acesso ────────────────────────────────────────────────────────
+	log {
+		output file /var/log/caddy/siia-access.log
+		level  INFO
 	}
 
-	handle /siagg {
-		redir /siagg/ 308
-	}
-
+	# ── Portainer: gerenciador de containers ──────────────────────────────────
 	handle_path /portainer/* {
 		reverse_proxy portainer:9000
 	}
 
-	handle_path /api/v1/* {
-		reverse_proxy 172.18.0.3:8000
+	# ── SIIA 2.0: API REST, admin Django e arquivos estáticos ────────────────
+	handle /siia-api/* {
+		reverse_proxy siia-backend:8000
 	}
 
-	handle_path /siagg-backend/* {
-		reverse_proxy siagg-backend:8000
+	handle /siia-admin/* {
+		reverse_proxy siia-backend:8000
 	}
 
-	handle_path /siagg/* {
-		reverse_proxy siagg-frontend:80
+	handle /siia-static/* {
+		reverse_proxy siia-backend:8000
 	}
 
+	handle /siia-media/* {
+		reverse_proxy siia-backend:8000
+	}
+
+	# ── Reabilita: API REST, admin Django e arquivos estáticos ───────────────
 	handle /api/* {
 		reverse_proxy reabilita-backend:8000
 	}
@@ -35,11 +40,8 @@ http://192.168.3.60 {
 		reverse_proxy reabilita-backend:8000
 	}
 
+	# ── SIIA 2.0: Frontend SPA React (tudo o mais) ───────────────────────────
 	handle {
-		reverse_proxy reabilita-frontend:80
-	}
-
-	log {
-		output stdout
+		reverse_proxy siia-frontend:80
 	}
 }
